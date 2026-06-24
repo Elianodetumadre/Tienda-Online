@@ -1,0 +1,35 @@
+﻿@model LOGIN.Models.Producto
+@{
+    ViewData["Title"] = "Detalles del Producto";
+}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">🔍 Detalles del Producto</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Id)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Nombre)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombre)</dd>
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Descripcion)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Descripcion)</dd>
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Cantidad)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Cantidad)</dd>
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Precio)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Precio)</dd>
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FechaRegistro)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FechaRegistro)</dd>
+                    </dl>
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">✏️ Editar</a>
+                        <a asp-action="Index" class="btn btn-secondary">🔙 Volver al Listado</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

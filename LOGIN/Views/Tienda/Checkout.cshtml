@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Pago Seguro";
+}
+
+<div class="row justify-content-center mt-2">
+    <div class="col-md-7">
+        <h3 class="fw-bold mb-4"><i class="bi bi-shield-check text-success me-2"></i>Pago Seguro</h3>
+        <div class="card card-modern border-0">
+            <div class="card-body p-5">
+                <form asp-action="ConfirmarPedido" method="post">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">1. Detalles de Entrega</h5>
+                    <div class="mb-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold">Dirección Completa</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
+                            <input type="text" name="direccion" class="form-control border-start-0 ps-0 bg-light" placeholder="Ej: Av. Libertador 123, Cochabamba" required />
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-3 border-bottom pb-2 mt-5">2. Método de Pago</h5>
+                    <div class="mb-4">
+                        <div class="form-check border rounded p-3 mb-2 bg-light">
+                            <input class="form-check-input ms-1" type="radio" name="metodoPago" value="Tarjeta" id="pago1" checked required>
+                            <label class="form-check-label ms-3 w-100 fw-semibold" for="pago1">
+                                <i class="bi bi-credit-card text-primary me-2"></i>Tarjeta de Crédito / Débito
+                            </label>
+                        </div>
+                        <div class="form-check border rounded p-3 mb-2 bg-light">
+                            <input class="form-check-input ms-1" type="radio" name="metodoPago" value="QR" id="pago2">
+                            <label class="form-check-label ms-3 w-100 fw-semibold" for="pago2">
+                                <i class="bi bi-qr-code text-dark me-2"></i>Pago con QR (Yape / Plin / Bancos)
+                            </label>
+                        </div>
+                        <div class="form-check border rounded p-3 bg-light">
+                            <input class="form-check-input ms-1" type="radio" name="metodoPago" value="Efectivo" id="pago3">
+                            <label class="form-check-label ms-3 w-100 fw-semibold" for="pago3">
+                                <i class="bi bi-cash text-success me-2"></i>Pago contra entrega (Efectivo)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-dark text-white rounded p-4 d-flex justify-content-between align-items-center mt-5">
+                        <div>
+                            <span class="d-block text-white-50 small">Total a pagar hoy</span>
+                            <span class="fs-3 fw-bold">@ViewBag.Total.ToString("C")</span>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg rounded-pill px-4 shadow">
+                            Confirmar Compra <i class="bi bi-check2-circle ms-1"></i>
+                        </button>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a asp-action="Carrito" class="text-muted text-decoration-none small"><i class="bi bi-arrow-left"></i> Volver al carrito</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

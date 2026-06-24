@@ -1,0 +1,137 @@
+﻿@model List<LOGIN.Models.CarritoItem>
+@{
+    ViewData["Title"] = "Mi Carrito";
+}
+
+<h2 class="fw-bold mb-4"><i class="bi bi-cart3 text-primary me-2"></i>Tu Carrito</h2>
+
+@if (!Model.Any())
+{
+    <div class="card card-modern text-center py-5">
+        <div class="card-body">
+            <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3 fw-bold">Tu carrito está vacío</h4>
+            <p class="text-muted">¡Descubre nuestros productos y encuentra lo que buscas!</p>
+            <a asp-action="Index" class="btn btn-gradient mt-2 px-4 rounded-pill">Ir de compras</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card card-modern">
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush rounded-4">
+                        @foreach (var item in Model)
+                        {
+                            <li class="list-group-item p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2 text-center mb-3 mb-md-0">
+                                        <div class="bg-light rounded p-3 d-inline-block">
+                                            <i class="bi bi-box-seam fs-2 text-secondary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <h5 class="fw-bold mb-1">@item.Producto?.Nombre</h5>
+                                        <span class="text-primary fw-semibold">@item.Producto?.Precio.ToString("C")</span>
+                                        <div class="text-muted small mt-1">Stock disp: @item.Producto?.Cantidad</div>
+                                    </div>
+                                    <div class="col-md-3 mb-3 mb-md-0 text-center">
+                                        <div class="input-group input-group-sm w-75 mx-auto">
+                                            <button class="btn btn-outline-secondary btn-minus" data-id="@item.Id">-</button>
+                                            <input type="number" class="form-control text-center cantidad-input fw-bold" data-id="@item.Id" value="@item.Cantidad" min="1" readonly />
+                                            <button class="btn btn-outline-secondary btn-plus" data-id="@item.Id">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 text-end d-flex flex-column align-items-end justify-content-between h-100">
+                                        <button class="btn btn-sm text-danger btn-remove mb-2" data-id="@item.Id">
+                                            <i class="bi bi-trash fs-5"></i>
+                                        </button>
+                                        <h5 class="fw-bold mb-0 subtotal" data-id="@item.Id">@((item.Cantidad * (item.Producto?.Precio ?? 0)).ToString("C"))</h5>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card card-modern position-sticky" style="top: 100px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Resumen del pedido</h5>
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>Subtotal productos</span>
+                        <span id="resumen-subtotal">@ViewBag.Total.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>Costo de envío</span>
+                        <span class="text-success">Gratis</span>
+                    </div>
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fs-5 fw-bold">Total</span>
+                        <span class="fs-4 fw-bold text-primary" id="total">@ViewBag.Total.ToString("C")</span>
+                    </div>
+                    <a asp-action="Checkout" class="btn btn-gradient w-100 rounded-pill py-2 fs-5">
+                        Continuar al pago <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function actualizarItem(itemId, nuevaCantidad) {
+                $.post('/Tienda/ActualizarCantidad', { itemId: itemId, cantidad: nuevaCantidad })
+                    .done(function(response) {
+                        if (response.success) {
+                            if (response.itemRemoved) { location.reload(); }
+                            else {
+                                $(`.cantidad-input[data-id='${itemId}']`).val(nuevaCantidad);
+                                $(`.subtotal[data-id='${itemId}']`).text('$' + response.subtotal.toFixed(2));
+                                $('#total, #resumen-subtotal').text('$' + response.total.toFixed(2));
+                            }
+                        } else if (response.message) {
+                            Swal.fire({ icon: 'warning', title: 'Oops...', text: response.message });
+                        }
+                    });
+            }
+
+            $('.btn-plus').click(function() {
+                var itemId = $(this).data('id');
+                var input = $(`.cantidad-input[data-id='${itemId}']`);
+                actualizarItem(itemId, parseInt(input.val()) + 1);
+            });
+
+            $('.btn-minus').click(function() {
+                var itemId = $(this).data('id');
+                var input = $(`.cantidad-input[data-id='${itemId}']`);
+                var nueva = parseInt(input.val()) - 1;
+                if(nueva > 0) actualizarItem(itemId, nueva);
+            });
+
+            $('.btn-remove').click(function() {
+                var itemId = $(this).data('id');
+                // Alerta bonita de SweetAlert
+                Swal.fire({
+                    title: '¿Quitar producto?',
+                    text: "Se eliminará este artículo de tu carrito",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, quitar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) { actualizarItem(itemId, 0); }
+                });
+            });
+        });
+    </script>
+}

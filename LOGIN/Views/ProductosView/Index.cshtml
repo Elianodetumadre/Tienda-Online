@@ -1,0 +1,63 @@
+﻿@model IEnumerable<LOGIN.Models.Producto>
+@{
+    ViewData["Title"] = "Gestión de Productos";
+}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">📦 Productos</h3>
+            <a asp-action="Create" class="btn btn-light">➕ Nuevo Producto</a>
+        </div>
+        <div class="card-body">
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Mensaje"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center">
+                    No hay productos registrados. ¡Crea el primero!
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Nombre</td>
+                                    <td>@(item.Descripcion?.Length > 50 ? item.Descripcion.Substring(0, 50) + "..." : item.Descripcion)</td>
+                                    <td>@item.Cantidad</td>
+                                    <td>@item.Precio.ToString("C")</td>
+                                    <td>@item.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">🔍</a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️</a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑️</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
