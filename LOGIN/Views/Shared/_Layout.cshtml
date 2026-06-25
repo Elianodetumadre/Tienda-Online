@@ -11,133 +11,13 @@
 
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
-    <style>
-            /* =========================================
-                   TEMA MIS COMPRAS - DARK MODE LGBT
-                   ========================================= */
-
-            /* Creamos una "variable" con el arcoíris para no escribirlo a cada rato */
-            :root {
-                --arcoiris: linear-gradient(90deg, #FF0018, #FFA52C, #FFFF41, #008018, #0000F9, #86007D);
-            }
-
-            /* 1. Fondo principal oscuro */
-            body {
-                background-color: #121212 !important;
-                color: #ffffff !important;
-            }
-
-            /* 2. El título "Mis Compras" con color arcoíris (¡Magia de CSS!) */
-            h2, h1 {
-                background: var(--arcoiris) !important;
-                -webkit-background-clip: text !important; /* Pinta solo las letras */
-                -webkit-text-fill-color: transparent !important; /* Hace transparente el relleno */
-                display: inline-block;
-                font-weight: bold !important;
-            }
-
-            /* 3. Las cajas de los pedidos */
-            .card {
-                background-color: #1e1e1e !important; /* Gris oscuro para las tarjetas */
-                border: 2px solid transparent !important;
-                border-image: var(--arcoiris) 1 !important; /* Borde de arcoíris */
-                margin-bottom: 20px !important;
-                color: white !important;
-            }
-
-            /* La cabecera gris de cada pedido (Donde va la fecha y el # de pedido) */
-            .card-header {
-                background-color: #252525 !important;
-                border-bottom: 1px solid #444 !important;
-                color: white !important;
-            }
-
-            /* 4. La etiqueta verde de "Confirmado" la volvemos arcoíris */
-            .badge, .badge-success, .bg-success {
-                background: var(--arcoiris) !important;
-                color: white !important;
-                border-radius: 12px !important;
-                padding: 6px 12px !important;
-                font-size: 0.9em !important;
-                border: none !important;
-                text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important; /* Sombrita para que se lea */
-            }
-
-            /* 5. Estilos para la tabla (Pepsi, Aceite, Condones...) */
-            table {
-                color: white !important;
-            }
-
-                table th {
-                    border-bottom: 2px solid #555 !important;
-                    color: #ccc !important; /* Letras un poco más grises para los títulos */
-                }
-
-                table td {
-                    border-bottom: 1px solid #333 !important;
-                    vertical-align: middle !important;
-                }
-
-            /* 6. La cajita del resumen (Total, Envío, Referencia) */
-            /* Asegúrate de ponerle esta clase o usar la que ya tengas en tu HTML */
-            .resumen-pedido, .card-body div.text-right, .card-body div[style*="background"] {
-                background-color: #2a2a2a !important; /* Un gris un pelín más claro */
-                border-radius: 8px !important;
-                padding: 15px !important;
-                border: 1px dotted #555 !important;
-                color: #ddd !important;
-            }
-
-            /* Barra superior e inferior (Si no lo habías puesto antes) */
-            nav, header, footer {
-                background: var(--arcoiris) !important;
-                border: none !important;
-            }
-
-                nav a, header a, footer a, .navbar-brand {
-                    color: white !important;
-                    text-shadow: 1px 1px 3px rgba(0,0,0,0.8) !important;
-                }
-       
-
-            /* 1. Domar la tabla de productos (Pepsi, Aceite, etc.) */
-            table, .table, .table th, .table td, .table thead th, tbody, tr, td, th {
-                background-color: transparent !important;
-                background: none !important;
-                color: #ffffff !important; /* Texto blanco para que resalte */
-                border-color: #444 !important; /* Bordes de las celdas en gris oscuro */
-            }
-
-            /* Si tu tabla usa el estilo de rayas (table-striped), le damos un gris súper sutil */
-            .table-striped tbody tr:nth-of-type(odd) {
-                background-color: rgba(255, 255, 255, 0.05) !important;
-            }
-
-            /* 2. Arreglar la cajita de totales de la derecha */
-            /* Atrapamos cualquier div dentro de la tarjeta que esté intentando ser blanco */
-            .card-body div.bg-light,
-            .card-body div.bg-white,
-            .card-body div[style*="background-color: white"],
-            .card-body div[style*="background-color:#fff"],
-            .card-body > .row > div:last-child > div {
-                background-color: #252525 !important; /* La volvemos gris oscuro */
-                background: #252525 !important;
-                color: #ffffff !important;
-                border: 1px solid #555 !important; /* Un borde sutil para que no flote en la nada */
-                border-radius: 8px !important;
-            }
-
-            /* 3. Forzar que todos los textos (Total, Envío, Referencia) se vean bien */
-            .card-body p, .card-body h5, .card-body span, .card-body strong {
-                color: #eeeeee !important;
-            }
-    </style>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     @* Eliminar *@
 
     <link rel="manifest" href="/manifest.json">
 
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#0969DA">
 
     <link rel="apple-touch-icon"
           href="/icons/icon-192.png">
@@ -148,7 +28,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark github-navbar sticky-top shadow-sm">
             <div class="container">
                 <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-box-seam me-2 text-info"></i>Palomita Store
