@@ -22,7 +22,6 @@
     <link rel="apple-touch-icon"
           href="/icons/icon-192.png">
 
-
 </head>
 
 
@@ -49,7 +48,7 @@
                     </ul>
                     @if (!string.IsNullOrEmpty(Context.Session.GetString("UsuarioId")))
                     {
-                        <span class="navbar-text text-white bg-secondary px-3 py-1 rounded-pill bg-opacity-25">
+                        <span class="navbar-text text-white px-3 py-1 rounded-pill border">
                             <i class="bi bi-person-circle me-1"></i>@Context.Session.GetString("UsuarioNombre")
                         </span>
                     }
@@ -64,7 +63,7 @@
         </main>
     </div>
 
-    <footer>
+    <footer class="py-3 mt-5">
         <div class="container"><small>© @DateTime.Now.Year - Desarrollado por Baruck malo</small></div>
     </footer>
 

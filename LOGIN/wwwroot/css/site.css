@@ -1,15 +1,14 @@
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 .2rem rgba(9,105,218,.15);
+    border-color: #0969DA;
 }
 
 html {
@@ -18,7 +17,10 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: #F6F8FA;
+    color: #24292F;
+    font-family: 'Inter',sans-serif;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +30,69 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+:root {
+    --primary: #0969DA;
+    --primary-hover: #0550AE;
+    --primary-light: #DDF4FF;
+    --background: #F6F8FA;
+    --surface: #FFFFFF;
+    --sidebar: #0D1117;
+    --text-main: #24292F;
+    --text-secondary: #57606A;
+    --border: #D0D7DE;
+}
+
+
+/* NAVBAR */
+
+.github-navbar {
+    background: #0D1117;
+}
+
+    .github-navbar .nav-link,
+    .github-navbar .navbar-brand {
+        color: white !important;
+    }
+
+
+/* CARDS */
+
+.card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #D0D7DE;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    transition: .2s;
+}
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    }
+
+
+/* BOTONES */
+
+.btn-primary {
+    background: #0969DA;
+    border-color: #0969DA;
+}
+
+    .btn-primary:hover {
+        background: #0550AE;
+        border-color: #0550AE;
+    }
+
+
+/* TABLAS */
+
+.table tbody tr:hover {
+    background: #DDF4FF;
+}
+
+.hero-card {
+    background: linear-gradient( 135deg, #0969DA 0%, #0D1117 100% );
+    color: white;
 }
