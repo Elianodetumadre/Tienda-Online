@@ -64,6 +64,11 @@ namespace LOGIN.Controllers
                         _webHostEnvironment.WebRootPath,
                         "images/productos");
 
+                    if (!Directory.Exists(carpeta))
+                    {
+                        Directory.CreateDirectory(carpeta);
+                    }
+
                     string nombreArchivo =
                         Guid.NewGuid().ToString() +
                         Path.GetExtension(producto.ImagenArchivo.FileName);
