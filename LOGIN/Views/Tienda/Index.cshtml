@@ -27,7 +27,19 @@
                     {
                         <span class="position-absolute top-0 start-0 m-3 badge bg-warning text-dark">¡Últimas @producto.Cantidad!</span>
                     }
-                    <i class="bi bi-box-seam text-secondary opacity-50" style="font-size: 5rem;"></i>
+                    @if (producto.ImagenUrl != null)
+                    {
+                        <img src="@producto.ImagenUrl"
+                             class="img-fluid"
+                             style="height:200px;
+                        object-fit:contain;" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-box-seam
+                        text-secondary opacity-50"
+                           style="font-size:5rem;"></i>
+                    }
                 </div>
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title fw-bold text-dark mb-1">@producto.Nombre</h5>

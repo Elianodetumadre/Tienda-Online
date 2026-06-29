@@ -29,6 +29,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
@@ -42,16 +43,38 @@
                             {
                                 <tr>
                                     <td>@item.Id</td>
+
+                                    <td>
+                                        @if (item.ImagenUrl != null)
+                                        {
+                                            <img src="@item.ImagenUrl"
+                                                 width="70"
+                                                 height="70"
+                                                 class="img-thumbnail"
+                                                 style="object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <span>Sin imagen</span>
+                                        }
+                                    </td>
+
                                     <td>@item.Nombre</td>
+
                                     <td>@(item.Descripcion?.Length > 50 ? item.Descripcion.Substring(0, 50) + "..." : item.Descripcion)</td>
+
                                     <td>@item.Cantidad</td>
+
                                     <td>@item.Precio.ToString("C")</td>
+
                                     <td>@item.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+
                                     <td>
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">🔍</a>
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️</a>
                                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑️</a>
                                     </td>
+
                                 </tr>
                             }
                         </tbody>

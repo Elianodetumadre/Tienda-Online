@@ -24,6 +24,11 @@ namespace LOGIN.Models
         [DataType(DataType.Currency)]
         public decimal Precio { get; set; }
 
+        public string? ImagenUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? ImagenArchivo { get; set; }
+
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
     }
 }

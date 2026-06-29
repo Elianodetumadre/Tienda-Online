@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LOGIN.Data;
 using LOGIN.Models;
@@ -8,10 +9,14 @@ namespace LOGIN.Controllers
     public class ProductosViewController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductosViewController(ApplicationDbContext context)
+        public ProductosViewController(
+            ApplicationDbContext context,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -51,18 +56,43 @@ namespace LOGIN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Producto producto)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (ModelState.IsValid)
             {
-                producto.FechaRegistro = DateTime.UtcNow;
+                if (producto.ImagenArchivo != null)
+                {
+                    string carpeta = Path.Combine(
+                        _webHostEnvironment.WebRootPath,
+                        "images/productos");
+
+                    string nombreArchivo =
+                        Guid.NewGuid().ToString() +
+                        Path.GetExtension(producto.ImagenArchivo.FileName);
+
+                    string rutaCompleta =
+                        Path.Combine(carpeta, nombreArchivo);
+
+                    using (var stream = new FileStream(
+                        rutaCompleta,
+                        FileMode.Create))
+                    {
+                        await producto.ImagenArchivo.CopyToAsync(stream);
+                    }
+
+                    producto.ImagenUrl =
+                        "/images/productos/" + nombreArchivo;
+                }
+
+                producto.FechaRegistro = DateTime.Now;
+
                 _context.Add(producto);
+
                 await _context.SaveChangesAsync();
+
                 TempData["Mensaje"] = "Producto creado exitosamente";
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(producto);
         }
 
@@ -101,6 +131,30 @@ namespace LOGIN.Controllers
                     existente.Descripcion = producto.Descripcion;
                     existente.Cantidad = producto.Cantidad;
                     existente.Precio = producto.Precio;
+
+                    if (producto.ImagenArchivo != null)
+                    {
+                        string carpeta = Path.Combine(
+                            _webHostEnvironment.WebRootPath,
+                            "images/productos");
+
+                        string nombreArchivo =
+                            Guid.NewGuid().ToString() +
+                            Path.GetExtension(producto.ImagenArchivo.FileName);
+
+                        string rutaCompleta =
+                            Path.Combine(carpeta, nombreArchivo);
+
+                        using (var stream = new FileStream(
+                            rutaCompleta,
+                            FileMode.Create))
+                        {
+                            await producto.ImagenArchivo.CopyToAsync(stream);
+                        }
+
+                        existente.ImagenUrl =
+                            "/images/productos/" + nombreArchivo;
+                    }
 
                     _context.Update(existente);
                     await _context.SaveChangesAsync();
