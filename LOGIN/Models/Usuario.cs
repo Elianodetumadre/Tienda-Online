@@ -32,6 +32,6 @@ namespace LOGIN.Models
         [Display(Name = "Ciudad")]
         public string? Ciudad { get; set; }
 
-        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
     }
 }

@@ -35,7 +35,7 @@ namespace LOGIN.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            producto.FechaRegistro = DateTime.Now;
+            producto.FechaRegistro = DateTime.UtcNow;
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetProducto), new { id = producto.Id }, producto);

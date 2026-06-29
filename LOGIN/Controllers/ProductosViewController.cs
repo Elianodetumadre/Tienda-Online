@@ -82,7 +82,7 @@ namespace LOGIN.Controllers
                         "/images/productos/" + nombreArchivo;
                 }
 
-                producto.FechaRegistro = DateTime.Now;
+                producto.FechaRegistro = DateTime.UtcNow;
 
                 _context.Add(producto);
 
