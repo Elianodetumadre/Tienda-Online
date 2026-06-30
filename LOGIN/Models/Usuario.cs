@@ -32,6 +32,9 @@ namespace LOGIN.Models
         [Display(Name = "Ciudad")]
         public string? Ciudad { get; set; }
 
+        [Display(Name = "Rol")]
+        public string? Rol { get; set; } = "Cliente";
+
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
     }
 }

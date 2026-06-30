@@ -19,8 +19,16 @@ namespace LOGIN.Controllers
         {
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
             {
-                return RedirectToAction("Index", "Home");
+                string rolActual = HttpContext.Session.GetString("UsuarioRol") ?? "";
+
+                if (EsAdmin(rolActual))
+                {
+                    return RedirectToAction("Index", "ProductosView");
+                }
+
+                return RedirectToAction("Index", "Tienda");
             }
+
             return View();
         }
 
@@ -34,22 +42,37 @@ namespace LOGIN.Controllers
 
                 if (usuario != null)
                 {
+                    string rolUsuario = string.IsNullOrWhiteSpace(usuario.Rol)
+                        ? "Cliente"
+                        : usuario.Rol.Trim();
+
                     HttpContext.Session.SetString("UsuarioId", usuario.Id.ToString());
                     HttpContext.Session.SetString("UsuarioNombre", usuario.Nombre ?? "");
                     HttpContext.Session.SetString("UsuarioEmail", usuario.Email ?? "");
-                    return RedirectToAction("Index", "Home");
+                    HttpContext.Session.SetString("UsuarioRol", rolUsuario);
+
+                    if (EsAdmin(rolUsuario))
+                    {
+                        return RedirectToAction("Index", "ProductosView");
+                    }
+
+                    return RedirectToAction("Index", "Tienda");
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Email o contraseña incorrectos");
-                }
+
+                ModelState.AddModelError("", "Email o contraseña incorrectos");
             }
+
             return View(model);
         }
 
         [HttpGet]
         public IActionResult Register()
         {
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            {
+                return RedirectToAction("Index", "Tienda");
+            }
+
             return View();
         }
 
@@ -59,6 +82,7 @@ namespace LOGIN.Controllers
             if (ModelState.IsValid)
             {
                 var existe = await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+
                 if (existe)
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
@@ -66,12 +90,18 @@ namespace LOGIN.Controllers
                 }
 
                 usuario.FechaRegistro = DateTime.UtcNow;
+
+                // Todo usuario registrado desde la web será Cliente.
+                // Nadie podrá registrarse como Admin desde el formulario.
+                usuario.Rol = "Cliente";
+
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
                 TempData["Mensaje"] = "Registro exitoso. ¡Inicia sesión!";
                 return RedirectToAction("Login");
             }
+
             return View(usuario);
         }
 
@@ -79,6 +109,18 @@ namespace LOGIN.Controllers
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
+        }
+
+        private bool EsAdmin(string rol)
+        {
+            if (string.IsNullOrWhiteSpace(rol))
+            {
+                return false;
+            }
+
+            rol = rol.Trim().ToLower();
+
+            return rol == "admin" || rol == "administrador";
         }
     }
 }

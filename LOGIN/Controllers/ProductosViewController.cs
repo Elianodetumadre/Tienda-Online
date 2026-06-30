@@ -24,36 +24,50 @@ namespace LOGIN.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
             var productos = await _context.Productos.ToListAsync();
+
             return View(productos);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var producto = await _context.Productos.FirstOrDefaultAsync(m => m.Id == id);
+            var producto = await _context.Productos
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (producto == null) return NotFound();
+            if (producto == null)
+            {
+                return NotFound();
+            }
 
             return View(producto);
         }
 
         public IActionResult Create()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
             return View();
@@ -63,9 +77,11 @@ namespace LOGIN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Producto producto)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
             if (ModelState.IsValid)
@@ -83,6 +99,7 @@ namespace LOGIN.Controllers
                     await _context.SaveChangesAsync();
 
                     TempData["Mensaje"] = "Producto creado exitosamente";
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -96,16 +113,24 @@ namespace LOGIN.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var producto = await _context.Productos.FindAsync(id);
 
-            if (producto == null) return NotFound();
+            if (producto == null)
+            {
+                return NotFound();
+            }
 
             return View(producto);
         }
@@ -114,12 +139,17 @@ namespace LOGIN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Producto producto)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
-            if (id != producto.Id) return NotFound();
+            if (id != producto.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -127,7 +157,10 @@ namespace LOGIN.Controllers
                 {
                     var existente = await _context.Productos.FindAsync(id);
 
-                    if (existente == null) return NotFound();
+                    if (existente == null)
+                    {
+                        return NotFound();
+                    }
 
                     existente.Nombre = producto.Nombre;
                     existente.Descripcion = producto.Descripcion;
@@ -143,11 +176,16 @@ namespace LOGIN.Controllers
                     await _context.SaveChangesAsync();
 
                     TempData["Mensaje"] = "Producto actualizado exitosamente";
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductoExists(producto.Id)) return NotFound();
+                    if (!ProductoExists(producto.Id))
+                    {
+                        return NotFound();
+                    }
+
                     throw;
                 }
                 catch (Exception ex)
@@ -161,16 +199,25 @@ namespace LOGIN.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
             {
-                return RedirectToAction("Login", "Account");
+                return acceso;
             }
 
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var producto = await _context.Productos.FirstOrDefaultAsync(m => m.Id == id);
+            var producto = await _context.Productos
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (producto == null) return NotFound();
+            if (producto == null)
+            {
+                return NotFound();
+            }
 
             return View(producto);
         }
@@ -179,11 +226,20 @@ namespace LOGIN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var acceso = VerificarAccesoAdmin();
+
+            if (acceso != null)
+            {
+                return acceso;
+            }
+
             var producto = await _context.Productos.FindAsync(id);
 
             if (producto != null)
             {
-                var enCarritos = _context.CarritoItems.Where(c => c.ProductoId == id);
+                var enCarritos = _context.CarritoItems
+                    .Where(c => c.ProductoId == id);
+
                 _context.CarritoItems.RemoveRange(enCarritos);
 
                 _context.Productos.Remove(producto);
@@ -191,6 +247,7 @@ namespace LOGIN.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
+
                     TempData["Mensaje"] = "Producto eliminado exitosamente";
                 }
                 catch (DbUpdateException)
@@ -200,6 +257,36 @@ namespace LOGIN.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private IActionResult? VerificarAccesoAdmin()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            string rolUsuario = HttpContext.Session.GetString("UsuarioRol") ?? "";
+
+            if (!EsAdmin(rolUsuario))
+            {
+                TempData["Mensaje"] = "No tienes permisos para acceder a la administración de productos.";
+                return RedirectToAction("Index", "Tienda");
+            }
+
+            return null;
+        }
+
+        private bool EsAdmin(string rol)
+        {
+            if (string.IsNullOrWhiteSpace(rol))
+            {
+                return false;
+            }
+
+            rol = rol.Trim().ToLower();
+
+            return rol == "admin" || rol == "administrador";
         }
 
         private async Task<string> SubirImagenASupabase(IFormFile imagenArchivo)
@@ -236,17 +323,17 @@ namespace LOGIN.Controllers
 
             if (string.IsNullOrWhiteSpace(supabaseUrl))
             {
-                throw new InvalidOperationException("Falta configurar Supabase:Url en appsettings.json.");
+                throw new InvalidOperationException("Falta configurar Supabase:Url en appsettings.json o variables de entorno.");
             }
 
             if (string.IsNullOrWhiteSpace(supabaseKey))
             {
-                throw new InvalidOperationException("Falta configurar Supabase:ServiceRoleKey en appsettings.json.");
+                throw new InvalidOperationException("Falta configurar Supabase:ServiceRoleKey en appsettings.json o variables de entorno.");
             }
 
             if (string.IsNullOrWhiteSpace(bucket))
             {
-                throw new InvalidOperationException("Falta configurar Supabase:Bucket en appsettings.json.");
+                throw new InvalidOperationException("Falta configurar Supabase:Bucket en appsettings.json o variables de entorno.");
             }
 
             supabaseUrl = supabaseUrl.TrimEnd('/');
