@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Asistente de Voz";
+}
+
+<div class="container mt-4">
+    <h2>
+        <i class="bi bi-mic-fill"></i>
+        Asistente de Voz
+    </h2>
+
+    <p>Presiona el botón y comienza a hablar.</p>
+
+    <button id="btnHablar" class="btn btn-primary">
+        Iniciar Micrófono
+    </button>
+
+    <button id="btnDetener" class="btn btn-danger">
+        Detener
+    </button>
+
+    <hr>
+
+    <textarea id="textoReconocido"
+              class="form-control"
+              rows="8"
+              placeholder="Aquí aparecerá el texto...">
+    </textarea>
+</div>
+
+<script src="~/js/speech.js"></script>

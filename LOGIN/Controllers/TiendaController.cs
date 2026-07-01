@@ -39,6 +39,14 @@ namespace LOGIN.Controllers
             return View(productos);
         }
 
+        public IActionResult AsistenteVoz()
+        {
+            if (!UsuarioLogueado())
+                return RedirectToAction("Login", "Account");
+
+            return View();
+        }
+
         // POST: Agregar al carrito
         [HttpPost]
         public async Task<IActionResult> AgregarAlCarrito(int productoId, int cantidad = 1)
